@@ -21,9 +21,10 @@ import {
   Pagination,
   Stack
 } from '@mui/material';
-import { ShoppingCart } from '@mui/icons-material';
+import { ShoppingCart, Visibility } from '@mui/icons-material';
 import ViewListIcon from '@mui/icons-material/ViewList';
 import ViewModuleIcon from '@mui/icons-material/ViewModule';
+import { useNavigate } from 'react-router';
 import api from '../utils/axios';
 
 const Products = () => {
@@ -34,6 +35,7 @@ const Products = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [productsPerPage] = useState(6);
   const [view, setView] = useState('grid');
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchProducts();
@@ -89,6 +91,10 @@ const Products = () => {
     if (nextView !== null) {
       setView(nextView);
     }
+  };
+
+  const handleViewProduct = (productId) => {
+    navigate(`/product/${productId}`);
   };
 
   const indexOfLastProduct = currentPage * productsPerPage;
@@ -177,14 +183,25 @@ const Products = () => {
                       ${product.price}
                     </Typography>
                     
-                    <Button
-                      variant="contained"
-                      fullWidth
-                      startIcon={<ShoppingCart />}
-                      onClick={() => addToCart(product)}
-                    >
-                      Add to Cart
-                    </Button>
+                    <Box sx={{ display: 'flex', gap: 1, flexDirection: 'column' }}>
+                      <Button
+                        variant="outlined"
+                        fullWidth
+                        startIcon={<Visibility />}
+                        onClick={() => handleViewProduct(product.id)}
+                        sx={{ mb: 1 }}
+                      >
+                        View Details
+                      </Button>
+                      <Button
+                        variant="contained"
+                        fullWidth
+                        startIcon={<ShoppingCart />}
+                        onClick={() => addToCart(product)}
+                      >
+                        Add to Cart
+                      </Button>
+                    </Box>
                   </CardContent>
                 </Card>
               </Grid>
@@ -207,13 +224,22 @@ const Products = () => {
                     <Typography variant="h6" color="primary">
                       ${product.price}
                     </Typography>
-                    <Button
-                      variant="contained"
-                      startIcon={<ShoppingCart />}
-                      onClick={() => addToCart(product)}
-                    >
-                      Add to Cart
-                    </Button>
+                    <Box sx={{ display: 'flex', gap: 1 }}>
+                      <Button
+                        variant="outlined"
+                        startIcon={<Visibility />}
+                        onClick={() => handleViewProduct(product.id)}
+                      >
+                        View
+                      </Button>
+                      <Button
+                        variant="contained"
+                        startIcon={<ShoppingCart />}
+                        onClick={() => addToCart(product)}
+                      >
+                        Add to Cart
+                      </Button>
+                    </Box>
                   </Box>
                 }
               >

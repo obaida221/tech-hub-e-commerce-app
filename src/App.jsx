@@ -6,6 +6,7 @@ import { ThemeProvider, useTheme } from './context/ThemeContext';
 import Navigation from './components/Navigation';
 import Login from './components/Login';
 import Products from './components/Products';
+import ProductDetails from './components/ProductDetails';
 import Users from './components/Users';
 import Cart from './components/Cart';
 import Checkout from './components/Checkout';
@@ -19,7 +20,7 @@ const AppContent = () => {
     palette: {
       mode: darkMode ? 'dark' : 'light',
       primary: {
-        main: '#CCDC28',
+        main: '#2852dcff',
         contrastText: '#000000',
       },
       secondary: {
@@ -34,7 +35,7 @@ const AppContent = () => {
       MuiButton: {
         styleOverrides: {
           contained: {
-            backgroundColor: '#CCDC28',
+            backgroundColor: '#2e28dcff',
             color: '#000000',
             '&:hover': {
               backgroundColor: '#b8c424',
@@ -45,7 +46,7 @@ const AppContent = () => {
       MuiAppBar: {
         styleOverrides: {
           root: {
-            backgroundColor: darkMode ? '#1e1e1e' : '#CCDC28',
+            backgroundColor: darkMode ? '#1e1e1e' : '#5228dcff',
             color: darkMode ? '#ffffff' : '#000000',
           },
         },
@@ -62,6 +63,7 @@ const AppContent = () => {
           <ProtectedRoute>
             <Routes>
               <Route path="/products" element={<Products />} />
+              <Route path="/product/:id" element={<ProductDetails />} />
               <Route path="/users" element={<Users />} />
               <Route path="/cart" element={<Cart />} />
               <Route path="/checkout" element={<Checkout />} />
