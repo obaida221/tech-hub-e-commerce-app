@@ -48,7 +48,7 @@ const Navigation = () => {
             src={darkMode ? techHubLight : techHubDark} 
             alt="TechHub Logo" 
             style={{ 
-              height: '40px', 
+              height: '80px', 
               marginRight: '12px',
               cursor: 'pointer'
             }}
