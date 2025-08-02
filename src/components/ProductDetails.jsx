@@ -28,7 +28,6 @@ const ProductDetails = () => {
 
   const fetchProductDetails = async () => {
     try {
-      // Since we're using mock data, we'll fetch all products and find the one we need
       const response = await api.get('/posts');
       const mockProducts = response.data.slice(0, 24).map(post => ({
         id: post.id,
@@ -60,7 +59,6 @@ const ProductDetails = () => {
     
     localStorage.setItem('cart', JSON.stringify(cart));
     
-    // Show a simple alert or you could add a toast notification
     alert('Product added to cart!');
   };
 
