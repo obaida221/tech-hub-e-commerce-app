@@ -1,5 +1,13 @@
 import { useState, useEffect } from 'react';
-import { 
+import {
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
+  Avatar,
+  IconButton,
+  ToggleButtonGroup,
+  ToggleButton,
   Container, 
   Grid,
   Card, 
@@ -14,6 +22,8 @@ import {
   Stack
 } from '@mui/material';
 import { ShoppingCart } from '@mui/icons-material';
+import ViewListIcon from '@mui/icons-material/ViewList';
+import ViewModuleIcon from '@mui/icons-material/ViewModule';
 import api from '../utils/axios';
 
 const Products = () => {
@@ -23,6 +33,7 @@ const Products = () => {
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [productsPerPage] = useState(6);
+  const [view, setView] = useState('grid');
 
   useEffect(() => {
     fetchProducts();
@@ -74,6 +85,12 @@ const Products = () => {
     localStorage.setItem('cart', JSON.stringify(cart));
   };
 
+  const handleViewChange = (event, nextView) => {
+    if (nextView !== null) {
+      setView(nextView);
+    }
+  };
+
   const indexOfLastProduct = currentPage * productsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
   const currentProducts = filteredProducts.slice(indexOfFirstProduct, indexOfLastProduct);
@@ -96,9 +113,25 @@ const Products = () => {
   return (
     <Container maxWidth="lg">
       <Box sx={{ my: 4 }}>
-        <Typography variant="h4" gutterBottom>
-          Products ({filteredProducts.length} items)
-        </Typography>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+          <Typography variant="h4" gutterBottom>
+            Products ({filteredProducts.length} items)
+          </Typography>
+          
+          <ToggleButtonGroup
+            value={view}
+            exclusive
+            onChange={handleViewChange}
+            aria-label="view toggle"
+          >
+            <ToggleButton value="grid" aria-label="grid view">
+              <ViewModuleIcon />
+            </ToggleButton>
+            <ToggleButton value="list" aria-label="list view">
+              <ViewListIcon />
+            </ToggleButton>
+          </ToggleButtonGroup>
+        </Box>
         
         <TextField
           fullWidth
@@ -108,54 +141,116 @@ const Products = () => {
           sx={{ mb: 3 }}
         />
 
-        <Grid container spacing={3}>
-          {currentProducts.map((product) => (
-            <Grid size={{ xs: 12, sm: 6, md: 4 }} key={product.id}>
-              <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-                <CardMedia
-                  component="img"
-                  height="200"
-                  image={product.image}
-                  alt={product.title}
-                />
-                <CardContent sx={{ flexGrow: 1 }}>
-                  <Typography variant="h6" gutterBottom>
-                    {product.title.length > 50 
-                      ? `${product.title.substring(0, 50)}...` 
-                      : product.title
-                    }
-                  </Typography>
-                  
-                  <Chip 
-                    label={product.category} 
-                    size="small" 
-                    sx={{ mb: 1 }} 
+        {view === 'grid' ? (
+          <Grid container spacing={3}>
+            {currentProducts.map((product) => (
+              <Grid size={{ xs: 12, sm: 6, md: 4 }} key={product.id}>
+                <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+                  <CardMedia
+                    component="img"
+                    height="200"
+                    image={product.image}
+                    alt={product.title}
                   />
-                  
-                  <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-                    {product.description.length > 100 
-                      ? `${product.description.substring(0, 100)}...` 
-                      : product.description
-                    }
-                  </Typography>
-                  
-                  <Typography variant="h6" color="primary" sx={{ mb: 2 }}>
-                    ${product.price}
-                  </Typography>
-                  
-                  <Button
-                    variant="contained"
-                    fullWidth
-                    startIcon={<ShoppingCart />}
-                    onClick={() => addToCart(product)}
-                  >
-                    Add to Cart
-                  </Button>
-                </CardContent>
-              </Card>
-            </Grid>
-          ))}
-        </Grid>
+                  <CardContent sx={{ flexGrow: 1 }}>
+                    <Typography variant="h6" gutterBottom>
+                      {product.title.length > 50 
+                        ? `${product.title.substring(0, 50)}...` 
+                        : product.title
+                      }
+                    </Typography>
+                    
+                    <Chip 
+                      label={product.category} 
+                      size="small" 
+                      sx={{ mb: 1 }} 
+                    />
+                    
+                    <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                      {product.description.length > 100 
+                        ? `${product.description.substring(0, 100)}...` 
+                        : product.description
+                      }
+                    </Typography>
+                    
+                    <Typography variant="h6" color="primary" sx={{ mb: 2 }}>
+                      ${product.price}
+                    </Typography>
+                    
+                    <Button
+                      variant="contained"
+                      fullWidth
+                      startIcon={<ShoppingCart />}
+                      onClick={() => addToCart(product)}
+                    >
+                      Add to Cart
+                    </Button>
+                  </CardContent>
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
+        ) : (
+          <List>
+            {currentProducts.map((product) => (
+              <ListItem
+                key={product.id}
+                sx={{
+                  border: 1,
+                  borderColor: 'divider',
+                  borderRadius: 1,
+                  mb: 1,
+                  bgcolor: 'background.paper'
+                }}
+                secondaryAction={
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                    <Typography variant="h6" color="primary">
+                      ${product.price}
+                    </Typography>
+                    <Button
+                      variant="contained"
+                      startIcon={<ShoppingCart />}
+                      onClick={() => addToCart(product)}
+                    >
+                      Add to Cart
+                    </Button>
+                  </Box>
+                }
+              >
+                <ListItemAvatar>
+                  <Avatar
+                    src={product.image}
+                    alt={product.title}
+                    sx={{ width: 80, height: 80, borderRadius: 1 }}
+                    variant="rounded"
+                  />
+                </ListItemAvatar>
+                <ListItemText
+                  primary={
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+                      <Typography variant="h6" component="span">
+                        {product.title}
+                      </Typography>
+                      <Chip 
+                        label={product.category} 
+                        size="small" 
+                      />
+                    </Box>
+                  }
+                  secondary={
+                    <Typography variant="body2" color="text.secondary">
+                      {product.description.length > 150 
+                        ? `${product.description.substring(0, 150)}...` 
+                        : product.description
+                      }
+                    </Typography>
+                  }
+                  sx={{ mr: 20 }}
+                />
+              </ListItem>
+            ))}
+          </List>
+        )}
 
         {totalPages > 1 && (
           <Stack spacing={2} alignItems="center" sx={{ mt: 4 }}>
