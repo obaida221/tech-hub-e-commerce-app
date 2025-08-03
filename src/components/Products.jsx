@@ -74,7 +74,7 @@ const Products = () => {
   };
 
   const addToCart = (product) => {
-    const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+    const cart = JSON.parse(localStorage.getItem('') || '[]');
     const existingItem = cart.find(item => item.id === product.id);
     
     if (existingItem) {
@@ -83,7 +83,7 @@ const Products = () => {
       cart.push({ ...product, quantity: 1 });
     }
     
-    localStorage.setItem('cart', JSON.stringify(cart));
+    localStorage.setItem('', JSON.stringify(cart));
   };
 
   const handleViewChange = (event, nextView) => {
@@ -252,7 +252,7 @@ const Products = () => {
                 </ListItemAvatar>
                 <ListItemText
                   primary={
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+                    <Box sx={{  alignItems: 'center', gap: 1, mb: 1 }}>
                       <Typography variant="h6" component="span">
                         {product.title}
                       </Typography>
@@ -264,13 +264,13 @@ const Products = () => {
                   }
                   secondary={
                     <Typography variant="body2" color="text.secondary">
-                      {product.description.length > 150 
+                      {product.description.length > 150
                         ? `${product.description.substring(0, 150)}...` 
                         : product.description
                       }
                     </Typography>
                   }
-                  sx={{ mr: 20 }}
+                  sx={{ mr: 25 }}
                 />
               </ListItem>
             ))}
